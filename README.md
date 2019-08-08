@@ -8,6 +8,36 @@
 
 
 
+[2019-08-08 목] 
+
+공부 정리
+
+- 문자열 다루기
+
+  - 모든 문자열은 utf-8이다.
+  - 문자열 길이를 재는 함수는 len인데 그 이유는
+    **“한글”**을 UTF-8로 저장하면 `0xed, 0x95, 0x9c, 0xea, 0xb8, 0x80`가 되기 때문
+  - 그래서 `unicode/utf8 패키지의 RuneCountInString 함수를 사용`하여 길이를 구해야 한다.
+
+- if
+
+  - if 는 무조건 bool이 와야한다. javascript는 특정 조건 `null, undefiend 등`이 와도 괜찮은데
+    여기는 얄짤없이 에러 팍!!
+
+  - 아래 코드처럼 if 절에 변수를 대입하여 바로 사용가능하다
+
+    ```go
+    if b, err = ioutil.ReadFile("./hello.txt"); err == nil {
+    		fmt.Printf("%s", b)
+    }
+    ```
+
+    단 이렇게 선언하고 if 바깥 구문에서는 `b` 변수를 사용 할 수 없다.
+
+- for
+
+  - Label를 사용하는거 그건 신기
+
 [2019-08-07] 
 
 공부 정리
