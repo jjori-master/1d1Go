@@ -7,7 +7,6 @@ func printSlice(slice []int) {
 	for _, value := range slice {
 		fmt.Println(value)
 	}
-
 }
 
 func main()  {
@@ -36,5 +35,35 @@ func main()  {
 
 	printSlice(slice4)
 
+	slice6 := []int{1, 2, 3, 4, 5}
+	var slice7 = slice6
+	slice6[0] = 9999
 
+	printSlice(slice6)
+	printSlice(slice7)
+
+
+	slice8 := []int{1, 2, 3, 4, 5}
+	slice9 := make([]int, 3)
+	copy(slice9, slice8)
+
+	slice8[0] = 9
+
+	printSlice(slice8)
+	printSlice(slice9)
+
+	slice10 := []int{1, 2, 3, 4, 5}
+	slice11 := slice10[0:2]
+
+	printSlice(slice10)
+	printSlice(slice11)
+
+
+	slice12 := []int{1, 2, 3, 4, 5}
+	slice13 := slice12[0:2]
+
+	slice13[0] = 99
+
+	printSlice(slice12)
+	printSlice(slice13)
 }
