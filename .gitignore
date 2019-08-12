@@ -14,3 +14,19 @@
 # goland
 .idea
 .idea/
+
+# pkg
+pkg
+pkg/
+
+github.com
+github.com/
+
+**/github.com
+**/github.com/
+
+golang.org
+golang.org/
+
+src/gihub.com
+

@@ -8,6 +8,54 @@
 
 
 
+[2019-08-12 월]
+
+- 책 진도 (93/420, 22.1%)
+
+- 맵
+
+  - 맵 선언 
+
+    - 맵은 선언하는 방식은 다른 타입과 동일하다. 맵은 make를 통해 공간 할당을 해야 사용가능하다.
+
+      ```go
+      var a map[string]int // 맵 선언
+      a = make(map[string]int) // make를 통해 공간을 할당해야지만 사용가능하다.
+      
+      var b = make(map[string]int) // make를 통해 타입을 선언하지 않고 맵 생성
+      
+      c := make(map[string]int) // var 생략
+      
+      d := map[string]int{"Math": 100, "English": 50} // 초기값으로 맵 생성
+      
+      f := map[string]int{
+          "Math": 100,
+          "English": 50, // 마지막은 ,를 붙인다.
+      }
+      ```
+
+  - 맵 순회
+
+    - 맵 순회는 range를 활용한다.
+
+      ```go
+      score := map[string]int{
+          "Math": 100,
+          "English": 50,
+          "Korean": 80,
+      }
+      
+      totalScore := 0
+      
+      // key나 valuefmf 사용하지 않을 경우 `_` 로 대입한다.
+      for key, value := range score { 
+          fmt.Println(key, " : ", value)
+          totalScore += value
+      }
+      
+      fmt.Println(totalScore) // 230
+      ```
+
 [2019-08-11 일]
 
 - 책 진도 (89/420, 21.1%)
