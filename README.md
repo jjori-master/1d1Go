@@ -8,6 +8,32 @@
 
 
 
+- Go 환경 설정
+
+  > go 1.11버전 이후부터는 `dep`이 아니라 `mod`를 사용한다.
+
+  ```bash
+  $ export GO111MODULE=on
+  
+  $ go mod init
+  $ go mod download
+  
+  사용 안하는 패키지 정리 및 재 다운로드
+  $ go mod tidy
+  
+  private repository 실패 시 로그인 요청
+  
+  $ export GIT_TERMINAL_PROMPT=1
+  $ go mod download
+  
+  
+  set GO111MODULE=on
+  set GIT_TERMINAL_PROMPT=1
+  go mod download
+  ```
+
+  
+
 [2019-08-13 화]
 
 - 책 진도 못나감 ㅠㅠ
