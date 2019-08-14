@@ -25,10 +25,9 @@ func readIfCase02() {
 		fmt.Printf("%s", b)
 	}
 
-
 }
 
-func main()  {
+func main() {
 
 	readIfCase01()
 	readIfCase02()

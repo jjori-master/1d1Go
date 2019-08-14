@@ -24,7 +24,6 @@ func main() {
 	arr3 := [5]int{6, 7, 8, 9, 10}
 	printArray(arr3)
 
-
 	arr4 := [5]int{1, 2, 3, 4, 5}
 	arr5 := arr4
 

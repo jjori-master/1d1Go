@@ -4,18 +4,18 @@ import "fmt"
 
 func main() {
 
-	for bottlesCount := 99; bottlesCount >= 0 ; bottlesCount-- {
+	for bottlesCount := 99; bottlesCount >= 0; bottlesCount-- {
 
-		switch  {
+		switch {
 		case bottlesCount > 1:
 			s := "bottles"
 			fmt.Printf("%d %s of beer on the wail, %d %s of beer\n", bottlesCount, s, bottlesCount, s)
 
-			if bottlesCount - 1 == 1 {
+			if bottlesCount-1 == 1 {
 				s = "bottle"
 			}
 
-			fmt.Printf("Take one down, pass it around, %d %s of beer on the wall\n", bottlesCount - 1, s)
+			fmt.Printf("Take one down, pass it around, %d %s of beer on the wall\n", bottlesCount-1, s)
 
 		case bottlesCount == 1:
 			fmt.Println("1 bottle of beer on the wail, 1 bottle of beer")

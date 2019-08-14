@@ -9,7 +9,7 @@ func printSlice(slice []int) {
 	}
 }
 
-func main()  {
+func main() {
 
 	var slice []int
 
@@ -20,7 +20,6 @@ func main()  {
 
 	slice2 := []int{1, 2, 3, 4, 5} // 바로 값을 할당
 	printSlice(slice2)
-
 
 	// 슬라이스는 append 함수를 이용해서 값을 추가한다.
 	slice3 := []int{1, 2, 3, 4, 5}
@@ -42,7 +41,6 @@ func main()  {
 	printSlice(slice6)
 	printSlice(slice7)
 
-
 	slice8 := []int{1, 2, 3, 4, 5}
 	slice9 := make([]int, 3)
 	copy(slice9, slice8)
@@ -57,7 +55,6 @@ func main()  {
 
 	printSlice(slice10)
 	printSlice(slice11)
-
 
 	slice12 := []int{1, 2, 3, 4, 5}
 	slice13 := slice12[0:2]

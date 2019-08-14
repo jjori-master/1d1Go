@@ -1,4 +1,4 @@
-package unit22_map
+package unit23_map
 
 import (
 	"fmt"
@@ -41,9 +41,9 @@ var _ = Describe("Map 사용",
 			It("test", func() {
 
 				score := map[string]int{
-					"Math": 100,
+					"Math":    100,
 					"English": 50,
-					"Korean": 80,
+					"Korean":  80,
 				}
 
 				totalScore := 0

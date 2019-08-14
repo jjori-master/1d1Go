@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-func main()  {
+func main() {
 	var a float64 = 10.0
 
 	for i := 0; i < 10; i++ {
@@ -18,5 +18,5 @@ func main()  {
 
 	fmt.Println(epsilon)
 
-	fmt.Println(math.Abs(a - 9.0 ) <= epsilon)
+	fmt.Println(math.Abs(a-9.0) <= epsilon)
 }

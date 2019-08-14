@@ -1,6 +1,6 @@
-package unit22_map
+package unit23_map
 
-func fetchScore() map[string]int{
+func fetchScore() map[string]int {
 	var score map[string]int
 	score = make(map[string]int)
 
