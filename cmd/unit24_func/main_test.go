@@ -12,7 +12,7 @@ func TestGinkgo(t *testing.T) {
 	RunSpecs(t, "Test functions Suite")
 }
 
-var _ = Describe("사칙 연슨",
+var _ = Describe("사칙 연산",
 	func() {
 
 		Context("사칙 연산을 해보자", func() {
