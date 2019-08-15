@@ -7,6 +7,6 @@ func printBootPercentage(a int, b int) {
 	fmt.Println(r, "%")
 }
 
-func main()  {
+func main() {
 	printBootPercentage(101, 420)
 }

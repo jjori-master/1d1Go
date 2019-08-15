@@ -53,7 +53,6 @@ var _ = Describe("사칙 연산",
 
 				Expect(sum).Should(Equal(15))
 
-
 			})
 		})
 	},

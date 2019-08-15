@@ -35,6 +35,62 @@
 
 
 
+
+[2019-08-15 목]
+
+- 대한독립 만세~!!! 휴일 만세~!!
+
+- 책 진도 (101/420 24%)
+
+- 함수
+
+  - Go에서 함수는 어디에 선언되어 있든지, 언제든지 호출할 수 있다.
+
+  - 함수는 아래와 같이 선언이 가능하다
+
+    ```go
+    func sum(a int, b int) int {
+        return a + b
+    }
+    
+    // 리턴할 변수를 선언하고, 해당 변수를 리턴 가능하다
+    func sum(a int, b int) (r int) {
+        r = a + b
+        return
+    }
+    ```
+
+    
+
+  - 다른 언어의 함수와는 다르게 다중 리턴이 가능하다
+
+    ```go
+    func sumNDiff(a int, b int)(sum int, diff int) {
+        sum = a + b
+        diff = a - b
+        return
+    }
+    ```
+
+    
+
+  - 다중 인자를 받고 처리 가능하다
+
+    ```go
+    func sumAll(n...) int {
+        total := 0
+        
+        // 다중 인자는 range를 사용하여 처리
+        for _, value := range n {
+    		total += value;
+        }
+        
+        return total
+    }
+    ```
+
+    
+
 [2019-08-14 수]
 
 - 오늘 회식이라 정신이 멍함... function에 대해 조금 풀어봄
