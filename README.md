@@ -34,6 +34,123 @@
 
 
 
+- `project/.git/hooks/pre-commit` 에 아래 소스를 넣는다.
+
+  ```bash
+  #!/bin/sh
+  gofiles=$(git diff --cached --name-only --diff-filter=ACM | grep '\.go$')
+  [ -z "$gofiles" ] && exit 0
+  
+  unformatted=$(gofmt -l $gofiles)
+  [ -z "$unformatted" ] && exit 0
+  
+  # Some files are not gofmt'd. Print message and fail.
+  
+  echo >&2 "Go files must be formatted with gofmt. Please run:"
+  for fn in $unformatted; do
+          echo >&2 "  gofmt -w $PWD/$fn"
+  done
+  
+  exit 1
+  ```
+
+  커밋전에 `포맷팅`이 안된 파일을 찾아서 알려준다.  땡스 [@zrma](https://github.com/zrma)
+
+
+
+[2019-08-16 금]
+
+- 함수 마지막
+
+  - go는 함수를 변수, 슬라이스, 맵에 넣고 사용이 가능하다
+
+    ```go
+    var hello func(a int, b int) int = sum
+    r := hello(1, 2) // 3
+    
+    world := diff
+    r := world(2, 1) // 1
+    
+    
+    f := []func(int, int) int{sum, diff}
+    r := f[0](20, 11) // 31
+    r = f[1](10, 1) // 9
+    
+    f := map[string]func(int, int) int{
+    	"sum":  sum,
+    	"diff": diff,
+    }
+    
+    r := f["sum"](3, 5) // 8
+    r = f["diff"](3, 5) // -2
+    ```
+
+  - 익명함수로 사용 가능
+
+    ```go
+    r := func(a int, b int) int {
+    	return a + b
+    }(1, 2) // 3
+    ```
+
+    
+
+
+
+[2019-08-15 목]
+
+- 대한독립 만세~!!! 휴일 만세~!!
+
+- 책 진도 (101/420 24%)
+
+- 함수
+
+  - Go에서 함수는 어디에 선언되어 있든지, 언제든지 호출할 수 있다.
+
+  - 함수는 아래와 같이 선언이 가능하다
+
+    ```go
+    func sum(a int, b int) int {
+        return a + b
+    }
+    
+    // 리턴할 변수를 선언하고, 해당 변수를 리턴 가능하다
+    func sum(a int, b int) (r int) {
+        r = a + b
+        return
+    }
+    ```
+
+    
+
+  - 다른 언어의 함수와는 다르게 다중 리턴이 가능하다
+
+    ```go
+    func sumNDiff(a int, b int)(sum int, diff int) {
+        sum = a + b
+        diff = a - b
+        return
+    }
+    ```
+
+    
+
+  - 다중 인자를 받고 처리 가능하다
+
+    ```go
+    func sumAll(n...) int {
+        total := 0
+        
+        // 다중 인자는 range를 사용하여 처리
+        for _, value := range n {
+    		total += value;
+        }
+        
+        return total
+    }
+    ```
+
+    
 
 [2019-08-14 수]
 
