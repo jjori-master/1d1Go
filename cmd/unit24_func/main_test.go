@@ -12,8 +12,55 @@ func TestGinkgo(t *testing.T) {
 	RunSpecs(t, "Test functions Suite")
 }
 
-var _ = Describe("사칙 연산",
+var _ = Describe("Unit 24 Go func",
 	func() {
+
+		Context("뭐! Go func도 변수처럼 쓸수 있다go??!!", func() {
+			It("sum 함수 hello 변수에 대입", func() {
+
+				var hello func(a int, b int) int = sum
+				r := hello(1, 2)
+
+				Expect(r).Should(Equal(3))
+
+				world := sum
+				r = world(13, 490)
+
+				Expect(r).Should(Equal(503))
+
+			})
+
+			It("slice에도 함수가 들어갈 수 있어~~", func() {
+				f := []func(int, int) int{sum, diff}
+
+				r := f[0](20, 11)
+				Expect(r).Should(Equal(31))
+
+				r = f[1](10, 1)
+				Expect(r).Should(Equal(9))
+			})
+
+			It("map에도 함수가 value로 들어 갈 수 있어~", func() {
+				f := map[string]func(int, int) int{
+					"sum":  sum,
+					"diff": diff,
+				}
+
+				r := f["sum"](3, 5)
+				Expect(r).Should(Equal(8))
+
+				r = f["diff"](3, 5)
+				Expect(r).Should(Equal(-2))
+			})
+
+			It("익명함수 사용", func() {
+				r := func(a int, b int) int {
+					return a + b
+				}(1, 2)
+				Expect(r).Should(Equal(3))
+
+			})
+		})
 
 		Context("사칙 연산을 해보자", func() {
 			It("더하기 연산", func() {

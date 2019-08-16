@@ -34,6 +34,67 @@
 
 
 
+- `project/.git/hooks/pre-commit` 에 아래 소스를 넣는다.
+
+  ```bash
+  #!/bin/sh
+  gofiles=$(git diff --cached --name-only --diff-filter=ACM | grep '\.go$')
+  [ -z "$gofiles" ] && exit 0
+  
+  unformatted=$(gofmt -l $gofiles)
+  [ -z "$unformatted" ] && exit 0
+  
+  # Some files are not gofmt'd. Print message and fail.
+  
+  echo >&2 "Go files must be formatted with gofmt. Please run:"
+  for fn in $unformatted; do
+          echo >&2 "  gofmt -w $PWD/$fn"
+  done
+  
+  exit 1
+  ```
+
+  커밋전에 `포맷팅`이 안된 파일을 찾아서 알려준다.  땡스 [@zrma](https://github.com/zrma)
+
+
+
+[2019-08-16 금]
+
+- 함수 마지막
+
+  - go는 함수를 변수, 슬라이스, 맵에 넣고 사용이 가능하다
+
+    ```go
+    var hello func(a int, b int) int = sum
+    r := hello(1, 2) // 3
+    
+    world := diff
+    r := world(2, 1) // 1
+    
+    
+    f := []func(int, int) int{sum, diff}
+    r := f[0](20, 11) // 31
+    r = f[1](10, 1) // 9
+    
+    f := map[string]func(int, int) int{
+    	"sum":  sum,
+    	"diff": diff,
+    }
+    
+    r := f["sum"](3, 5) // 8
+    r = f["diff"](3, 5) // -2
+    ```
+
+  - 익명함수로 사용 가능
+
+    ```go
+    r := func(a int, b int) int {
+    	return a + b
+    }(1, 2) // 3
+    ```
+
+    
+
 
 
 [2019-08-15 목]
