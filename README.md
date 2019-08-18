@@ -58,6 +58,36 @@
 
 
 
+[2019-08-18 일]
+
+- 지연 실행 함수 (defer)
+
+  - `defer`는 함수가 종료되기전 실행한다.
+
+    ```go
+    func world() {
+        fmt.Println('world!!')
+    }
+    
+    func hello() {
+        defer world()
+        
+        fmt.Println("hello")
+    }
+    
+    func main() {
+        hello() 
+        // hello
+        // world!!
+    }
+    ```
+
+  - 이것은 try ~ final과 동일하지만 문법적으로 엄청 간단하고 유용하다
+    특히 자원을 할당하고 해제할때 해제를 defer로 걸어놓고 시작할 수 있어서
+    간단할 뿐만 아니라 실수 예방에도 탁월한 문법같다. (뇌피셜~)
+
+  
+
 [2019-08-17 토]
 
 - 클로저(Closure)
