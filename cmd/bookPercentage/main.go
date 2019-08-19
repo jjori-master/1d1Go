@@ -4,9 +4,9 @@ import "fmt"
 
 func printBootPercentage(a int, b int) {
 	r := (a * 100) / b
-	fmt.Println(r, "%")
+	fmt.Println(a, "/", b, " ", r, "%")
 }
 
 func main() {
-	printBootPercentage(134, 528)
+	printBootPercentage(116, 420)
 }
