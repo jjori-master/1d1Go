@@ -56,7 +56,49 @@
 
   커밋전에 `포맷팅`이 안된 파일을 찾아서 알려준다.  땡스 [@zrma](https://github.com/zrma)
 
+[2019-08-21 수]
 
+- 포인터
+
+  - 포인터는 아래의 표현식이며, 초기값은 `nil`이다.
+
+    ```go
+    var numPtr *int
+    
+    fmt.Println(numPtr) // nill
+    ```
+
+  - 포인터는 `new`연산자를 이용하여 초기화 한다.
+
+    ```go
+    var numPtr *int = new(int)
+    
+    fmt.Println(numPtr) // Oxe0984080 메모리 주소값
+    ```
+
+  - 포인터에 값을 대입하거나 가져오려면 역참조를 사용
+
+    ```go
+    var numPtr *int = new(int)
+    
+    *numPtr = 1
+    
+    fmt.Ptringln(*numPtr) // 1
+    ```
+
+  - 변수 앞에 `&`를 붙이면 해당 변수의 메모리 주소를 뜻함.
+    따라서 포인터형 변수에 대입 가능
+
+    ```go
+    var num int = 1
+    
+    var numPtr *int = &num
+    
+    fmt.Println(num) // 1
+    fmt.Println(*numPtr) // 1
+    ```
+
+    
 
 [2019-08-20 화]
 
