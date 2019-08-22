@@ -43,5 +43,13 @@ var _ = Describe("Unit 28 pointer", func() {
 
 			Expect(&num).Should(Equal(numPtr))
 		})
+
+		It("포인트형 매개변수 사용 값이 잘 변하는지 확인", func() {
+			n := 1
+
+			hello(&n)
+
+			Expect(n).Should(Equal(2))
+		})
 	})
 })

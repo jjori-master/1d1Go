@@ -56,6 +56,66 @@
 
   커밋전에 `포맷팅`이 안된 파일을 찾아서 알려준다.  땡스 [@zrma](https://github.com/zrma)
 
+
+
+[2019-08-22 목]
+
+- 책 진도 (122/427, 29%)
+
+- 포인터
+
+  - 포인터형 변수를 `&`을 붙여 인자로 보내면 `메모리 주소`값이 넘어간다.
+    이렇게 `메모리 주소`값이 넘어간 인자를 수정하면, 기존 변수의 값이 변경된다.
+
+    ```go
+    func hello(n *int) {
+    	*n++
+    }
+    
+    n := 1
+    
+    hello(&n)
+    
+    fmt.Println(n) // 2
+    ```
+
+- 구조체
+
+  - 구조체를 선언하고 변수로 선언하는 것은 아래와 같다.
+
+    ```go
+    type Rectangle struct {
+    	width int
+    	height int
+    }
+    
+    var rect1 *Rectagle
+    rect1 := new(Rectagle)
+    
+    var rect2 Rectagle
+    rect2 = Rectagle{10, 20}
+    ```
+
+  - `new`연산자를 사용해 초기화를 하게되면 초기값을 선언할 수가 없으므로
+    `생성자 패턴`을 사용하여 변수선언, 메모리할당, 초기값 설정을 한번에 한다.
+
+    ```go
+    type Rectangle struct {
+    	width int
+    	height int
+    }
+    
+    func NewRetangle(width, height int) *Rectangle {
+    	return &Rectangle{width, height}
+    }
+    
+    rect1 := NewRectangle(10, 20)
+    
+    fmt.Println(rect1.width, rect1.height) // 10, 20
+    ```
+
+    
+
 [2019-08-21 수]
 
 - 포인터
