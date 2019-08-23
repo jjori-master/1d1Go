@@ -8,5 +8,5 @@ func printBootPercentage(a int, b int) {
 }
 
 func main() {
-	printBootPercentage(122, 420)
+	printBootPercentage(126, 420)
 }
