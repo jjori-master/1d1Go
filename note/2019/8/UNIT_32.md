@@ -17,8 +17,6 @@
   fmt.Println(p) // nill
   ```
 
-
-
 - 인터페이스의 사용
 
   > 인터페이스는 함수의 집합이다. 여기에 선언된 함수가 어떤 구조체나 사용자정의 타입에서 구현한 메서드인지는 모른다. 아니 관심도 없다. 인터페이스는 자신이 선언한 함수와 동일한 구조의 함수를 구현하고 있는 구조체나 타입이라면
@@ -94,4 +92,57 @@
   ```
 
   
+  
+  
+  
+  
+  
+  
+  
+  - 각 값이나 인스턴스의 실제 타입은 상관하지 않고, 구현된 메서드로만 타입을 판단하는
+    방식을 `덕 타이핑(Duck typing)`이라 한다.
+  
+  > "만약 어떤 새가 오리처럼 걷고, 헤엄치고, 꽥꽥 거리는 소리는 낸다면 나는 그 새를
+  > 오리라 부르겠다."
+  
+  아래 코드는 덕 타이핑을 구현한것
+  
+  ```go
+  type Duck struct {
+  }
+  
+  func (d Duck) quack() string {
+  	return "quack"
+  }
+  
+  type Person struct{}
+  
+  func (p Person) quack() string {
+  	return "꽥"
+  }
+  
+  type Quacker interface {
+  	quack() string
+  }
+  
+  func inTheForest(q Quacker) {
+      fmt.Println(q.quack())
+  }
+  
+  var donald Duck
+  inTheForest(donald) // quack
+  
+  var jo Person
+  inTheForest(jo) // 꽥
+  ```
+  
+  `inTheForest`는 그냥 오리가 운다라는 것만 관심이 있을뿐
+  그게 오리인지, 사람인지는 관심이 없다. 그냥 오리처럼 울수 있다면 `quack()`
+  오리라고 판단한다.
+  
+  하지만 실제 숲에서 오리 흉내를 낸다면 총맞기 쉽지 않을까??
+  
+  
+
+
 

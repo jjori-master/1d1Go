@@ -24,3 +24,24 @@ func (rect *Triangle) area() int {
 type AreaCalculator interface {
 	area() int
 }
+
+type Duck struct {
+}
+
+func (d Duck) quack() string {
+	return "quack"
+}
+
+type Person struct{}
+
+func (p Person) quack() string {
+	return "꽥"
+}
+
+type Quacker interface {
+	quack() string
+}
+
+func vocalCord(q Quacker) string {
+	return q.quack()
+}

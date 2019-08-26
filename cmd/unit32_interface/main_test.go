@@ -47,5 +47,21 @@ var _ = Describe("Unit 32 interface", func() {
 			Expect(ac1.area()).Should(Equal(200))
 			Expect(ac2.area()).Should(Equal(100))
 		})
+
+		It("오리는 quack이라는 소리로 웁니다", func() {
+			var donald Duck
+
+			r := vocalCord(donald)
+
+			Expect(r).Should(Equal("quack"))
+		})
+
+		It("사람은 꽥이라고 오리 소리를 흉내 냅니다", func() {
+			var jo Person
+
+			r := vocalCord(jo)
+
+			Expect(r).Should(Equal("꽥"))
+		})
 	})
 })
