@@ -63,5 +63,32 @@ var _ = Describe("Unit 32 interface", func() {
 
 			Expect(r).Should(Equal("꽥"))
 		})
+
+		It("donal type은 Quacker 인터페이스 타입입니다..", func() {
+			var donald Duck
+
+			_, ok := interface{}(donald).(Quacker)
+			Expect(ok).Should(Equal(true))
+
+		})
+
+		It("빈인터페이스는 무슨 타입이든 받아 줍니다.", func() {
+			r1 := formatString(1)
+			Expect(r1).Should(Equal("1"))
+
+			r2 := formatString(2.5)
+			Expect(r2).Should(Equal("2.5"))
+
+			r3 := formatString("Hello, world")
+			Expect(r3).Should(Equal("Hello, world"))
+
+			p1 := Person{"Jo", 10}
+			r4 := formatString(p1)
+			Expect(r4).Should(Equal("Jo 10"))
+
+			p2 := Person{"So", 20}
+			r5 := formatString(&p2)
+			Expect(r5).Should(Equal("So 20 1"))
+		})
 	})
 })
