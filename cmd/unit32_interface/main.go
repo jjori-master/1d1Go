@@ -34,9 +34,9 @@ func (d Duck) quack() string {
 	return "quack"
 }
 
-type Person struct{
+type Person struct {
 	name string
-	age int
+	age  int
 }
 
 func (p Person) quack() string {
@@ -77,7 +77,6 @@ func formatString(arg interface{}) string {
 	case *Person:
 		p := arg.(*Person)
 		return p.name + " " + strconv.Itoa(p.age) + " 1"
-
 
 	default:
 		return "Error"
