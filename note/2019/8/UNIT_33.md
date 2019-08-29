@@ -1,4 +1,4 @@
-#### UNIT 32 고루틴 Goroutine
+#### UNIT 33 고루틴 Goroutine
 
 > 고루틴은 함수를 동시에 실행시키는 기능
 >

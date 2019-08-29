@@ -1,0 +1,64 @@
+package unit34_channel
+
+import (
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"testing"
+)
+
+func TestGinkgo(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Test functions Suite")
+}
+
+var _ = Describe("Unit 34 channel", func() {
+	Context("channel 실습", func() {
+		It("channel 로 합산 데이터 받기", func() {
+			c := make(chan int) // int 형 채널 생성
+
+			go sum(1, 2, c)
+
+			n := <-c
+
+			Expect(n).Should(Equal(3))
+		})
+
+		It("채널을 := 대신 var로 선언해서 사용하기", func() {
+			var c chan int
+			c = make(chan int)
+
+			go sum(12, 7, c)
+
+			n := <-c
+
+			Expect(n).Should(Equal(19))
+		})
+
+		It("채널 동기화 테스트", func() {
+
+			var slice []int
+			slice = make([]int, 0)
+
+			c := make(chan int)
+
+			go func() {
+				for i := 0; i < 3; i++ {
+					c <- i
+				}
+			}()
+
+			for i := 10; i < 13; i++ {
+				n := <-c
+				slice = append(slice, n)
+				slice = append(slice, i)
+			}
+
+			Expect(slice[0]).Should(Equal(0))
+			Expect(slice[1]).Should(Equal(10))
+			Expect(slice[2]).Should(Equal(1))
+			Expect(slice[3]).Should(Equal(11))
+			Expect(slice[4]).Should(Equal(2))
+			Expect(slice[5]).Should(Equal(12))
+		})
+	})
+})
