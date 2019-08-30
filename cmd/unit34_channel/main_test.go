@@ -1,6 +1,7 @@
 package unit34_channel
 
 import (
+	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"testing"
@@ -59,6 +60,23 @@ var _ = Describe("Unit 34 channel", func() {
 			Expect(slice[3]).Should(Equal(11))
 			Expect(slice[4]).Should(Equal(2))
 			Expect(slice[5]).Should(Equal(12))
+		})
+
+		It("채널 버퍼 테스트", func() {
+			done := make(chan bool, 2)
+			count := 4
+
+			go func() {
+				for i := 0; i < count; i++ {
+					done <- true
+					fmt.Println("보냈어 :", i)
+				}
+			}()
+
+			for i := 0; i < count; i++ {
+				<-done
+				fmt.Println("받았어 :", i)
+			}
 		})
 	})
 })

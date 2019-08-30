@@ -22,8 +22,86 @@
   채널을 통해 값을 받을 수 있다.
 
   ```go
+  func sum(a int, b int, c chan int) {
+  	c <- a + b // 채널에 a 와 b의 합산 결과를 내보냅
+  }
   
+  c := make(chan int) // int 형 채널 생성
+  
+  go sum(1, 2, c)
+  
+  n := <-c // 채널을 넘겼으면 받을 때까지 대기 즉 동기화
+  
+  fmt.Println(n) // 3
+  ```
+
+
+
+- 채널에 값을 집어 넣었을때 그 값을 사용하지 않으면 대기한다.
+
+  ```go
+  var slice []int
+  slice = make([]int, 0)
+  
+  c := make(chan int)
+  
+  go func() {
+      for i := 0; i < 3; i++ {
+          c <- i // 채널의 값을 가져가기 까지 반복문 대기
+      }
+  }()
+  
+  for i := 10; i < 13; i++ {
+      n := <- c // 값을 가져가랏!!
+      slice = append(slice, n)
+      slice = append(slice, i)
+  }
+  
+  Expect(slice[0]).Should(Equal(0)) // 고루틴
+  Expect(slice[1]).Should(Equal(10)) // 다른 반복문 
+  Expect(slice[2]).Should(Equal(1)) // 고루틴
+  Expect(slice[3]).Should(Equal(11)) // 다른 반복문
+  Expect(slice[4]).Should(Equal(2)) // 고루틴
+  Expect(slice[5]).Should(Equal(12)) // 다른 반복문
+  ```
+
+- 채널 버퍼 사용
+
+  > 채널 생성시 두번째 인자에 숫자를 기입하면 그 사이즈 대로 버퍼가 사이즈가 된다.
+  > 채널 버퍼를 1개 이상 설정시 비동기 채널이 생성이 된다. 
+
+  
+
+  ```go
+  done := make(chan bool, 2) // 채널 버퍼 사이즈 2로 설정
+  count := 4
+  
+  go func() {
+      for i := 0; i < count; i++ {
+          done <- true
+          fmt.Println("보냈어 :", i)
+      }
+  }()
+  
+  for i := 0; i < count; i++ {
+      <-done
+      fmt.Println("받았어 :", i)
+  }
+  
+  보냈어 : 0
+  보냈어 : 1
+  보냈어 : 2
+  받았어 : 0
+  받았어 : 1
+  받았어 : 2
+  받았어 : 3
+  보냈어 : 3
   ```
 
   
 
+  ```go
+  
+  ```
+
+  
