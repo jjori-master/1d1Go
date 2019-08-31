@@ -98,10 +98,58 @@
   보냈어 : 3
   ```
 
-  
+
+
+
+- range 와 close
+
+  > for문 안에서 range  키워드를 사용하면 채널이 닫힐 때까지 반복하면서 값을 꺼낸다.
 
   ```go
+  c := make(chan int, 1)
   
+  go func() {
+    for i:=0;i<5;i++ {
+      c <- i
+  	}
+  
+    close(c)
+  }()
+  
+  for i:=range c {
+    fmt.Println(i)
+  }
+  
+  
+  // 0
+  // 1
+  // 2
+  // 3
+  // 4
+  
+  ```
+
+  
+
+  > 채널이 닫혀 있는지 여부를 확인 할수 있다.
+
+  ```go
+  c := make(chan int)
+  
+  go func() {
+    c <- 1
+  }()
+  
+  n, ok := <-c
+  Expect(n).Should(Equal(1))
+  Expect(ok).Should(Equal(true))
+  
+  close(c) // 채널 닫음
+  
+  n, ok = <-c
+  
+  Expect(n).Should(Equal(0))
+  Expect(ok).Should(Equal(false))
   ```
 
   

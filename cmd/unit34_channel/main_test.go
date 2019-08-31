@@ -78,5 +78,24 @@ var _ = Describe("Unit 34 channel", func() {
 				fmt.Println("받았어 :", i)
 			}
 		})
+
+		It("채널이 닫혀 있는지 확인", func() {
+			c := make(chan int)
+
+			go func() {
+				c <- 1
+			}()
+
+			n, ok := <-c
+			Expect(n).Should(Equal(1))
+			Expect(ok).Should(Equal(true))
+
+			close(c) // 채널 닫음
+
+			n, ok = <-c
+
+			Expect(n).Should(Equal(0))
+			Expect(ok).Should(Equal(false))
+		})
 	})
 })
