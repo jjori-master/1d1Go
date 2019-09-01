@@ -84,18 +84,32 @@ var _ = Describe("Unit 34 channel", func() {
 
 			go func() {
 				c <- 1
+				close(c) // 채널 닫음
 			}()
 
 			n, ok := <-c
 			Expect(n).Should(Equal(1))
 			Expect(ok).Should(Equal(true))
 
-			close(c) // 채널 닫음
-
 			n, ok = <-c
 
 			Expect(n).Should(Equal(0))
 			Expect(ok).Should(Equal(false))
+		})
+
+		It("보내기 채널 받기 채널", func() {
+			c := make(chan int)
+
+			go producer(c)
+
+			go consumer(c)
+		})
+
+		It("채널을 인자로 받기", func() {
+
+			c := sumReturnChan(1, 2)
+
+			Expect(<-c).Should(Equal(3))
 		})
 	})
 })

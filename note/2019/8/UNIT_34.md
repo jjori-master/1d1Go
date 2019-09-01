@@ -138,18 +138,79 @@
   
   go func() {
     c <- 1
+    close(c) // 채널 닫음
   }()
   
   n, ok := <-c
   Expect(n).Should(Equal(1))
   Expect(ok).Should(Equal(true))
   
-  close(c) // 채널 닫음
-  
   n, ok = <-c
   
   Expect(n).Should(Equal(0))
   Expect(ok).Should(Equal(false))
+  ```
+  
+
+
+- 보내기 전용, 읽기 전용 채널
+
+  > 읽기만 전용할 수 있고 받기만 전용할수 있는 함수를 만든다.
+  > 방법은 간단한데 채널을 인자로 받을때 `chan`이 어디에 위치하느냐의 차이
+  > func(c chan<- int) //  보내기 전용 채널
+  > func(c <-chan int) // 받기 전용
+  >
+  > 보내기 전용은 보내기만 가능하며, 읽기 전용은 읽기만 가능
+
+  ```go
+  // 보내기 전용 채널
+  func producer(c chan<- int) {
+  
+  	for i := 0; i < 5; i++ {
+  		c <- i
+  	}
+  
+  	c <- 100
+      
+      // <- c 보내기 전용이라 받을 수 없음 에러!!
+      
+  }
+  
+  // 받기 전용 채널
+  func consumer(c <-chan int) {
+  	for i := range c {
+  		fmt.Println(i)
+  	}
+  
+  	fmt.Println(<-c)
+      
+      // c <- 1 받기 전용이라 보낼 수 없음 에러!!
+  }
+  
+  ```
+
+
+
+- 채널 리턴
+
+  > 채널도 인자로 리턴 받을 수 있다.
+  > 그리리고 그 채널은 받기 전까지는 둥둥 떠다닐뿐~~ 아니 클로저로 그 채널을 잡고 받으면 문제가 없으나
+  > 만약 함수내에서 생성한 채널이고 채널로 데이터를 보냈다면, 그 채널이 받기 전까지는 둥둥 떠다닌다.
+  > 아니 대기중~!!
+
+  ```go
+  func sumReturnChan(a, b int) <-chan int {
+  	out := make(chan int)
+  
+  	go func() {
+  		out <- a + b
+  	}()
+  
+  	return out
+  }
+  
+  
+  Expect(<-c).Should(Equal(3))
   ```
 
   
