@@ -214,3 +214,68 @@
   ```
 
   
+
+- 채널을 닫지 않으면 `for ~ range`를 사용하는 구문에서는 무한 대기를 탄다.
+
+  ```go
+  out := make(chan int)
+  
+  go func() {
+      out <- 1
+  
+      // close(out) 를 해주지 않으면 무한대기
+  }()
+  
+  go func() {
+      time.Sleep(2 * time.Second)
+      close(out) // 2초 후에 풀어줘서 테스트를 통과시킴
+  }()
+  
+  for r := range out {
+      Expect(r).Should(Equal(1))
+  }
+  ```
+
+  
+
+- 채널을 인자로 받고(받기전용 채널)  리턴 값으로 채널을 반환하는 `sum`함수
+
+  ```go
+  // 보내기 전용 채널 num 함수
+  func num(a int, b int) <-chan int {
+      out := make(chan int)
+  
+      go func() {
+          out <- a
+          out <- b
+          close(out)
+      }()
+  
+      return out
+  }
+  
+  // 받기 전용 함수를 이용하여 채널을 보내는 sum 함수
+  func sum(c <-chan int) <-chan int {
+  	out := make(chan int)
+  
+  	go func() {
+  		r := 0
+  
+  		for i := range c {
+  			r += i
+  		}
+  
+  		out <- r
+  	}()
+  
+  	return out
+  }
+  
+  c := num(1, 2)
+  
+  out := sum(c)
+  
+  Expect(<-out).Should(Equal(3))
+  ```
+
+  

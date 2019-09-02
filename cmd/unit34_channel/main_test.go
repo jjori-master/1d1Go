@@ -5,6 +5,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"testing"
+	"time"
 )
 
 func TestGinkgo(t *testing.T) {
@@ -110,6 +111,47 @@ var _ = Describe("Unit 34 channel", func() {
 			c := sumReturnChan(1, 2)
 
 			Expect(<-c).Should(Equal(3))
+		})
+
+		It("채널을 인자로 받아 결과 값을 다시 채널로 보내는 sum 함수 테스트", func() {
+			c := num(1, 2)
+
+			out := sumReciveChanelReturnChanel(c)
+
+			Expect(<-out).Should(Equal(3))
+		})
+
+		It("채널에 값을 넣고 close하고 다른 곳에서 값을 받을 수 있나?", func() {
+			out := make(chan int)
+
+			go func() {
+				out <- 1
+
+				close(out)
+			}()
+
+			for r := range out {
+				Expect(r).Should(Equal(1))
+			}
+		})
+
+		It("채널을 colse 하지 않으면 range에서 무한 대기!!", func() {
+			out := make(chan int)
+
+			go func() {
+				out <- 1
+
+				// close(out) 무한대기
+			}()
+
+			go func() {
+				time.Sleep(2 * time.Second)
+				close(out)
+			}()
+
+			for r := range out {
+				Expect(r).Should(Equal(1))
+			}
 		})
 	})
 })
