@@ -340,7 +340,7 @@
   go func() {
       for ; i < 3; i++ {
           select {
-              case c1 <- arr[i]:
+          case c1 <- arr[i]:
           case j := <-c1:
               Expect(j).Should(Equal(arr[i]))
           }
