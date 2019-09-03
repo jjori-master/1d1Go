@@ -153,5 +153,62 @@ var _ = Describe("Unit 34 channel", func() {
 				Expect(r).Should(Equal(1))
 			}
 		})
+
+		It("간단한 select 사용하기 ", func() {
+			c1 := make(chan int)
+			c2 := make(chan string)
+
+			go func() {
+				c1 <- 1
+			}()
+
+			go func() {
+				c2 <- "안녕하세요"
+			}()
+
+			go func() {
+				for {
+					select {
+					case i := <-c1:
+						Expect(i).Should(Equal(1))
+
+					case s := <-c2:
+						Expect(s).Should(Equal("안녕하세요"))
+					}
+				}
+			}()
+		})
+
+		It("select에서 채널에 값을 보내기", func() {
+			c1 := make(chan int)
+
+			go func() {
+				i := <-c1
+				Expect(i).Should(Equal(1))
+			}()
+
+			go func() {
+				select {
+				case c1 <- 1:
+				}
+			}()
+		})
+
+		It("select 에서 하나의 채널로 주고 받기", func() {
+			c1 := make(chan int)
+			i := 0
+			var arr []int
+			arr = append(arr, []int{1, 2, 3}...)
+
+			go func() {
+				for ; i < 3; i++ {
+					select {
+					case c1 <- arr[i]:
+					case j := <-c1:
+						Expect(j).Should(Equal(arr[i]))
+					}
+				}
+			}()
+		})
 	})
 })

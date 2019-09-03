@@ -278,4 +278,74 @@
   Expect(<-out).Should(Equal(3))
   ```
 
+
+
+
+- `select`사용하기
+
+  ```go
+  c1 := make(chan int)
+  c2 := make(chan string)
+  
+  go func() {
+      c1 <- 1
+  }()
+  
+  go func() {
+      c2 <- "안녕하세요"
+  }()
+  
+  go func() {
+      for { // select는 for문 안에서 실행한다.
+          select {
+              case i := <-c1: // c1 채널일때 값을 가져와서 대입한다.
+              Expect(i).Should(Equal(1))
+  
+              case s := <-c2: // c2 채널일때 값을 가져와서 대입한다.
+              Expect(s).Should(Equal("안녕하세요"))
+          }
+      }
+  }()
+  ```
+
+
+
+- select에서 채널에 값을 보낼 수 있다.
+
+  ```go
+  c1 := make(chan int)
+  
+  go func() {
+      i := <- c1
+      Expect(i).Should(Equal(1))
+  }()
+  
+  go func() {
+      select {
+          case c1 <- 1:
+          }
+  }()
+  ```
+
+  
+
+- 단일 채널로 받기 전용, 주기 전용 두가지 case로 select 실행
+
+  ```go
+  c1 := make(chan int)
+  i := 0
+  var arr []int
+  arr = append(arr, []int{1, 2, 3}...)
+  
+  go func() {
+      for ; i < 3; i++ {
+          select {
+              case c1 <- arr[i]:
+          case j := <-c1:
+              Expect(j).Should(Equal(arr[i]))
+          }
+      }
+  }()
+  ```
+
   
