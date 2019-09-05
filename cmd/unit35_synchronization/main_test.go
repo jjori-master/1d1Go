@@ -52,5 +52,40 @@ var _ = Describe("Unit 35 동기화 객체 사용", func() {
 
 			Expect(len(data)).Should(Equal(2000))
 		})
+
+		It("읽기 쓰기 Mutex", func() {
+			runtime.GOMAXPROCS(runtime.NumCPU())
+
+			data := 0
+			rwMutex := new(sync.RWMutex)
+
+			go func() {
+				for i := 0; i < 3; i++ {
+					rwMutex.Lock()
+
+					data = i
+
+					rwMutex.Unlock()
+				}
+			}()
+
+			go func() {
+				for i := 0; i < 3; i++ {
+					rwMutex.RLock()
+
+					Expect(data).Should(Equal(i))
+
+					rwMutex.RUnlock()
+				}
+			}()
+
+			go func() {
+				for i := 0; i < 3; i++ {
+					rwMutex.RLock()
+					Expect(data).Should(Equal(i))
+					rwMutex.RUnlock()
+				}
+			}()
+		})
 	})
 })

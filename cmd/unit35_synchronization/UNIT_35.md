@@ -80,3 +80,52 @@
 
   
 
+
+
+- 읽기, 쓰기 Mutex
+
+  > Mutex는 읽기 동작 전용, 쓰기 동작 전용으로 락을 걸 수 있다.
+  >
+  > `읽기 전용 락`은 서로 락을 잡지 않지만 읽는 도중 데이터의 변조가 있으면 안되기 때문에
+  > `쓰기 전용 락`은 막는다.
+  >
+  > `쓰기 전용 락`은 모든 락을 막는다.
+
+  ```go
+  runtime.GOMAXPROCS(runtime.NumCPU())
+  
+  data := 0
+  rwMutex := new(sync.RWMutex)
+  
+  go func() {
+      for i := 0; i < 3; i++ {
+          rwMutex.Lock()
+  
+          data = i
+  
+          rwMutex.Unlock()
+      }
+  }()
+  
+  go func() {
+      for i := 0; i < 3; i++ {
+          rwMutex.RLock() // 읽기 전용 락끼리는 락을 걸리 않는다.
+          
+          Expect(data).Should(Equal(i))
+          
+          rwMutex.RUnlock()
+      }
+  }()
+  
+  go func() {
+      for i := 0; i < 3; i++ {
+          rwMutex.RLock()
+          
+          Expect(data).Should(Equal(i))
+          
+          rwMutex.RUnlock()
+      }
+  }()
+  ```
+
+  
