@@ -6,7 +6,6 @@ import (
 	"testing"
 )
 
-
 func TestCar(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
