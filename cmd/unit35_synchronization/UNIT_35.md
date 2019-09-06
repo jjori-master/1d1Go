@@ -128,4 +128,67 @@
   }()
   ```
 
-  
+
+- 조건 변수 사용하기
+
+  > 조건 변수는 대기하고 있는 객체 하나만 깨우거나 여러개를 깨울때 사용
+
+  - 조건 한개씩 깨우기
+
+    ```GO
+    runtime.GOMAXPROCS(runtime.NumCPU())
+    
+    var mutex = new(sync.Mutex)
+    
+    var cond = sync.NewCond(mutex)
+    
+    c := make(chan bool, 3)
+    
+    slice := []int{1, 2, 3}
+    
+    for _, s := range slice {
+        go func(n int) {
+            mutex.Lock()
+    
+            c <- true
+    
+            fmt.Println("Wait begin : ", n)
+    
+            cond.Wait()
+    
+            fmt.Println("Wait end : ", n)
+    
+            mutex.Unlock()
+        }(s)
+    }
+    
+    for i := 0; i < 3; i++ {
+        <-c
+    }
+    
+    for i := 0; i < 3; i++ {
+        mutex.Lock()
+    
+        fmt.Println("signal : ", i)
+    
+        cond.Signal()
+    
+        mutex.Unlock()
+    }
+    
+    // 결과값 
+    
+    Wait begin :  3
+    Wait begin :  1
+    Wait begin :  2
+    
+    signal :  0
+    signal :  1
+    signal :  2
+    
+    Wait end :  3
+    Wait end :  1
+    Wait end :  2
+    ```
+
+    
