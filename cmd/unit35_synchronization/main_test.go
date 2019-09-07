@@ -130,5 +130,64 @@ var _ = Describe("Unit 35 동기화 객체 사용", func() {
 				mutex.Unlock()
 			}
 		})
+
+		It("조건 변수 모두 깨우기", func() {
+			runtime.GOMAXPROCS(runtime.NumCPU())
+
+			var mutex = new(sync.Mutex)
+
+			var cond = sync.NewCond(mutex)
+
+			c := make(chan bool, 3)
+
+			slice := []int{1, 2, 3}
+
+			for _, s := range slice {
+				go func(n int) {
+					mutex.Lock()
+
+					c <- true
+
+					fmt.Println("Wait begin : ", n)
+
+					cond.Wait()
+
+					fmt.Println("Wait end : ", n)
+
+					mutex.Unlock()
+				}(s)
+			}
+
+			for i := 0; i < 3; i++ {
+				<-c
+			}
+
+			mutex.Lock()
+
+			fmt.Println("broadcast")
+
+			cond.Broadcast()
+
+			mutex.Unlock()
+		})
+
+		It("함수 한번만 실행하기", func() {
+			runtime.GOMAXPROCS(runtime.NumCPU())
+
+			once := new(sync.Once)
+
+			var hello *Hello   // 구조체 포인터 선언
+			hello = new(Hello) // 구조체 메모리 할당
+
+			for i := 0; i < 3; i++ {
+				go func() {
+					once.Do(hello.sayHello)
+				}()
+			}
+
+			time.Sleep(1 * time.Second)
+
+			Expect(len(hello.messages)).Should(Equal(1))
+		})
 	})
 })

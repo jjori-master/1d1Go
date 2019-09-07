@@ -191,4 +191,38 @@
     Wait end :  2
     ```
 
-    
+
+
+
+- 함수 한번만 실행하기
+
+  > 고루틴을 여러번 호출하나 고루틴 안의 실행 함수는 단 한번만 실행
+
+  ```go
+  type Hello struct {
+  	messages []string
+  }
+  
+  func (hello *Hello) sayHello()  {
+  	hello.messages = append(hello.messages, "hello world")
+  }
+  
+  runtime.GOMAXPROCS(runtime.NumCPU())
+  
+  once := new(sync.Once)
+  
+  var hello *Hello   // 구조체 포인터 선언
+  hello = new(Hello) // 구조체 메모리 할당
+  
+  for i := 0; i < 3; i++ {
+      go func() {
+          once.Do(hello.sayHello) // 함수 단 한번만 실행
+      }()
+  }
+  
+  time.Sleep(1 * time.Second)
+  
+  Expect(len(hello.messages)).Should(Equal(1))
+  ```
+
+  
