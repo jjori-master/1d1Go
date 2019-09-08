@@ -189,5 +189,11 @@ var _ = Describe("Unit 35 동기화 객체 사용", func() {
 
 			Expect(len(hello.messages)).Should(Equal(1))
 		})
+
+		FIt("풀 사용", func() {
+			usePool()
+
+			time.Sleep(3 * time.Second)
+		})
 	})
 })

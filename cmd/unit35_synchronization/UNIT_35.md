@@ -226,3 +226,95 @@
   ```
 
   
+
+- 풀 사용하기
+
+  > 풀은 객체(메모리)를 사용한 후 보관해 두었다가 다시 사용하게 해주는 기능
+  > 즉 새로운 객체를 메모리에 할당할 필요 없이 풀에서 가져다 사용하는 방법으로
+  > 메모리 생성, 해제의 가비지 컬렉터에게 부담을 줄여주는 방법. 일종의 캐시
+
+  ```go
+  type Data struct {
+  	tag string
+  	buffer []int
+  }
+  
+  func main()  {
+  	runtime.GOMAXPROCS(runtime.NumCPU())
+  
+  	pool := sync.Pool{
+  		New: func() interface{} {
+  			data := new(Data)
+  
+  			data.tag = "new"
+  
+  			data.buffer = make([]int, 10)
+  
+  			return data
+  		},
+  	}
+  
+  	for i :=0; i< 10; i++ {
+  		go func() {
+  			data := pool.Get().(*Data)
+  
+  			for index := range data.buffer {
+  				data.buffer[index] = rand.Intn(100) // 랜던값 지정
+  			}
+  
+  			fmt.Println(data)
+  
+  			data.tag = "used"
+  
+  			pool.Put(data)
+  		}()
+  	}
+  
+  	for i :=0; i< 10; i++ {
+  		go func() {
+  			data := pool.Get().(*Data)
+  
+  			n := 0
+  
+  			for index := range data.buffer {
+  				data.buffer[index] = n
+  
+  				n += 2
+  			}
+  
+  			fmt.Println(data)
+  
+  			data.tag = "used"
+  
+  			pool.Put(data)
+  		}()
+  	}
+  }
+  
+  출력값은 그때마다 다르다. pool에서 객체를 가져올때 없으면 tag에 new를 하기로 했음
+  출력에는 2개의 new가 있으며 나머지는 pool에서 있는 객체를 그대로 이용.
+  
+  출력 : 
+  &{new [0 2 4 6 8 10 12 14 16 18]}
+  &{used [94 11 62 89 28 74 11 45 37 6]}
+  &{used [95 66 28 58 47 47 87 88 90 15]}
+  &{used [41 8 87 31 29 56 37 31 85 26]}
+  &{used [13 90 94 63 33 47 78 24 59 53]}
+  &{used [57 21 89 99 0 5 88 38 3 55]}
+  &{used [51 10 5 56 66 28 61 2 83 46]}
+  &{used [63 76 2 18 47 94 77 63 96 20]}
+  &{used [23 53 37 33 41 59 33 43 91 2]}
+  &{used [78 36 46 7 40 3 52 43 5 98]}
+  &{used [0 2 4 6 8 10 12 14 16 18]}
+  &{used [0 2 4 6 8 10 12 14 16 18]}
+  &{used [0 2 4 6 8 10 12 14 16 18]}
+  &{used [0 2 4 6 8 10 12 14 16 18]}
+  &{used [0 2 4 6 8 10 12 14 16 18]}
+  &{used [0 2 4 6 8 10 12 14 16 18]}
+  &{used [0 2 4 6 8 10 12 14 16 18]}
+  &{new [81 87 47 59 81 18 25 40 56 0]}
+  &{used [0 2 4 6 8 10 12 14 16 18]}
+  &{used [0 2 4 6 8 10 12 14 16 18]}
+  ```
+
+  
