@@ -3,6 +3,7 @@ package unit35_synchronization
 import (
 	"fmt"
 	"runtime"
+	"strconv"
 	"sync"
 	"testing"
 	"time"
@@ -190,10 +191,34 @@ var _ = Describe("Unit 35 동기화 객체 사용", func() {
 			Expect(len(hello.messages)).Should(Equal(1))
 		})
 
-		FIt("풀 사용", func() {
+		It("풀 사용", func() {
 			usePool()
 
 			time.Sleep(3 * time.Second)
+		})
+	})
+
+	FContext("대기 그룹 사용", func() {
+		It("기본적인 대기 그룹 사용 고루틴이 모두 끝날때가지 대기", func() {
+
+			data := Data{"", []int{}}
+
+			wg := new(sync.WaitGroup)
+
+			for i:=0; i < 10; i++ {
+				wg.Add(1)
+				go func(n int) {
+					defer wg.Done()
+
+					data.tag = "tag_" + strconv.Itoa(i + 1)
+					data.buffer = append(data.buffer, 1)
+				}(i)
+			}
+
+			wg.Wait()
+
+			Expect(data.tag).Should(Equal("tag_11"))
+			Expect(len(data.buffer)).Should(Equal(10))
 		})
 	})
 })

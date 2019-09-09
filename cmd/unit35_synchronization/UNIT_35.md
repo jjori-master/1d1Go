@@ -317,4 +317,38 @@
   &{used [0 2 4 6 8 10 12 14 16 18]}
   ```
 
+
+
+
+
+- 대기 그룹 사용
+
+  > 대기 그룹은 모든 고루틴이 종료 될때까지 기다릴때 사용
+
+  ```go
+  type Data struct {
+  	tag    string
+  	buffer []int
+  }
+  
+  data := Data{"", []int{}}
+  
+  wg := new(sync.WaitGroup)
+  
+  for i:=0; i < 10; i++ {
+      wg.Add(1)
+      go func(n int) {
+          defer wg.Done()
+  
+          data.tag = "tag_" + strconv.Itoa(i + 1)
+          data.buffer = append(data.buffer, 1)
+      }(i)
+  }
+  
+  wg.Wait()
+  
+  Expect(data.tag).Should(Equal("tag_11"))
+  Expect(len(data.buffer)).Should(Equal(10))
+  ```
+
   
