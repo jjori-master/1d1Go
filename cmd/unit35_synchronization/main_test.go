@@ -5,6 +5,7 @@ import (
 	"runtime"
 	"strconv"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -198,19 +199,19 @@ var _ = Describe("Unit 35 동기화 객체 사용", func() {
 		})
 	})
 
-	FContext("대기 그룹 사용", func() {
+	Context("대기 그룹 사용", func() {
 		It("기본적인 대기 그룹 사용 고루틴이 모두 끝날때가지 대기", func() {
 
 			data := Data{"", []int{}}
 
 			wg := new(sync.WaitGroup)
 
-			for i:=0; i < 10; i++ {
+			for i := 0; i < 10; i++ {
 				wg.Add(1)
 				go func(n int) {
 					defer wg.Done()
 
-					data.tag = "tag_" + strconv.Itoa(i + 1)
+					data.tag = "tag_" + strconv.Itoa(i+1)
 					data.buffer = append(data.buffer, 1)
 				}(i)
 			}
@@ -219,6 +220,39 @@ var _ = Describe("Unit 35 동기화 객체 사용", func() {
 
 			Expect(data.tag).Should(Equal("tag_11"))
 			Expect(len(data.buffer)).Should(Equal(10))
+		})
+	})
+
+	FContext("원자적 연산", func() {
+		It("2000번 더하고, 1000번 뺄때 최종값은 1000이다. ", func() {
+			runtime.GOMAXPROCS(runtime.NumCPU())
+
+			var data int64 = 0
+			wg := new(sync.WaitGroup)
+
+			// 2000번 더하기
+			for i := 0; i < 2000; i++ {
+				wg.Add(1)
+
+				go func() {
+					atomic.AddInt64(&data, 1)
+					wg.Done()
+				}()
+			}
+
+			for i := 0; i < 1000; i++ {
+				wg.Add(1)
+
+				go func() {
+					atomic.AddInt64(&data, -1)
+					wg.Done()
+				}()
+			}
+
+			wg.Wait()
+
+			var expectData int64 = 1000
+			Expect(data).Should(Equal(expectData))
 		})
 	})
 })

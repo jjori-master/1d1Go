@@ -351,4 +351,103 @@
   Expect(len(data.buffer)).Should(Equal(10))
   ```
 
+
+
+
+- 원자적 연산 사용하기
+
+  > `쓰레드 세이프하지 않다` 라는 말이 있다. 쓰레드의 가장 큰 위험성 중 하나가 바로 같은 저장공간을 점유하는것인데
+  >
+  > 쓰레드가 세이프 하지 않다라는 것은, 위와 같은 현상으로 인해 저장공간의 값이 의도치 않게 덮어써진다거나 하는 문제가 발생된다는 점이다. 
+  >
+  > 아래의 예제는 2000번 값 1씩 더하기, 1000번 1씩 빼기를 실행하는 코드이다.
+  > 사람의 눈으로 보면 1000이 나와야 하나 정확히 1000이 나오지 않는다.
+
+  ```go
+  runtime.GOMAXPROCS(runtime.NumCPU())
   
+  var data int64 = 0
+  wg := new(sync.WaitGroup)
+  
+  // 2000번 더하기
+  for i := 0; i < 2000; i++ {
+    wg.Add(1)
+  
+    go func() {
+  		data += 1
+      wg.Done()
+    }()
+  }
+  
+  for i := 0; i < 1000; i++ {
+    wg.Add(1)
+  
+    go func() {
+      data -= 1
+      wg.Done()
+    }()
+  }
+  
+  wg.Wait()
+  
+  var expectData int64 = 1000
+  // 테스트 코드 실패 정확히 1000이 떨어지기란 거의 기적과도 같다.
+  Expect(data).Should(Equal(expectData))
+  ```
+
+  
+
+  > 위의 코드는 쓰레드 세이프지 하지 않는 코드이다. 빼거나 더할때 동시에 값에 접근해서 사용하기 때문에 오차가 발생했다. Go 언어에서는 해당 메모리에 동시에 접근하지 않도록 원자적 연산을 지원한다.
+  >
+  > 아래의 코드는 원자적 연산을 통해 동시에 메모리에 접근하지 않아 정확한 연산을 하는 코드이다
+
+
+  ```go
+  runtime.GOMAXPROCS(runtime.NumCPU())
+  
+  var data int64 = 0
+  wg := new(sync.WaitGroup)
+  
+  // 2000번 더하기
+  for i := 0; i < 2000; i++ {
+    wg.Add(1)
+  
+    go func() {
+      atomic.AddInt64(&data, 1)
+      wg.Done()
+    }()
+  }
+  
+  for i := 0; i < 1000; i++ {
+    wg.Add(1)
+  
+    go func() {
+      atomic.AddInt64(&data, -1)
+      wg.Done()
+    }()
+  }
+  
+  wg.Wait()
+  
+  var expectData int64 = 1000
+  Expect(data).Should(Equal(expectData))
+  ```
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
