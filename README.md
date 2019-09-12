@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jjori-master/1d1Go.svg?branch=master)](https://travis-ci.org/jjori-master/1d1Go)
+
 # 1d1Go
 
 > 하루 30분 [가장 빨리 만나는 Go(이재홍)](http://pyrasis.com/go.html) 책을 읽는다.
