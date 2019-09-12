@@ -1,12 +1,12 @@
 package unit33_goroutine
 
 import (
-	"runtime"
-	"testing"
-	"time"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"runtime"
+	"sync"
+	"sync/atomic"
+	"testing"
 )
 
 func TestGinkgo(t *testing.T) {
@@ -19,43 +19,52 @@ var _ = Describe("Unit 33 goroutine", func() {
 		It("goroutine 으로 10번 호출 그런데 뭔가가  이상한 테스트얌... ", func() {
 			rect := Rectangle{}
 
+			wg := new(sync.WaitGroup)
+
 			for i := 0; i < 10; i++ {
-				go change(&rect)
+				wg.Add(1)
+				go change(&rect, wg)
 			}
 
-			time.Sleep(time.Duration(1000))
+			wg.Wait()
 
 			Expect(rect.width).Should(Equal(10))
 		})
 
 		It("goroutine 일반 클로저로 실행", func() {
-			runtime.GOMAXPROCS(1)
+			runtime.GOMAXPROCS(runtime.NumCPU())
 
-			n := 0
+			var data int64 = 0
+			wg := new(sync.WaitGroup)
 
 			for i := 0; i < 10; i++ {
+				wg.Add(1)
 				go func() {
-					n += i
+					atomic.AddInt64(&data, 1)
+					wg.Done()
 				}()
 			}
 
-			time.Sleep(time.Duration(1000))
+			wg.Wait()
 
-			Expect(n).Should(Equal(100))
+			Expect(data).Should(Equal(int64(10)))
 		})
 
 		It("goroutine 클로저를 매개 변수로 실행", func() {
 			runtime.GOMAXPROCS(1)
 
 			n := 0
+			wg := new(sync.WaitGroup)
 
 			for i := 0; i < 10; i++ {
+				wg.Add(1)
 				go func(x int) {
 					n += x
+					wg.Done()
 				}(i)
 			}
 
-			time.Sleep(time.Duration(1000))
+			wg.Wait()
 
 			Expect(n).Should(Equal(45))
 		})

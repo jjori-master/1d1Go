@@ -3,7 +3,6 @@ package unit35_synchronization
 import (
 	"fmt"
 	"runtime"
-	"strconv"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -62,33 +61,30 @@ var _ = Describe("Unit 35 동기화 객체 사용", func() {
 			data := 0
 			rwMutex := new(sync.RWMutex)
 
-			go func() {
-				for i := 0; i < 3; i++ {
+			wg := new(sync.WaitGroup)
+
+			for i := 0; i < 100; i++ {
+				wg.Add(1)
+				go func() {
 					rwMutex.Lock()
-
-					data = i
-
+					data += 1
 					rwMutex.Unlock()
-				}
-			}()
+					wg.Done()
+				}()
+			}
 
-			go func() {
-				for i := 0; i < 3; i++ {
-					rwMutex.RLock()
+			for i := 0; i < 100; i++ {
+				wg.Add(1)
+				go func() {
+					rwMutex.Lock()
+					data += 1
+					rwMutex.Unlock()
+					wg.Done()
+				}()
+			}
 
-					Expect(data).Should(Equal(i))
-
-					rwMutex.RUnlock()
-				}
-			}()
-
-			go func() {
-				for i := 0; i < 3; i++ {
-					rwMutex.RLock()
-					Expect(data).Should(Equal(i))
-					rwMutex.RUnlock()
-				}
-			}()
+			wg.Wait()
+			Expect(data).Should(Equal(200))
 		})
 
 		It("조건 변수 하나씩 깨우기", func() {
@@ -202,31 +198,29 @@ var _ = Describe("Unit 35 동기화 객체 사용", func() {
 	Context("대기 그룹 사용", func() {
 		It("기본적인 대기 그룹 사용 고루틴이 모두 끝날때가지 대기", func() {
 
-			data := Data{"", []int{}}
+			var data int = 0
 
 			wg := new(sync.WaitGroup)
 
 			for i := 0; i < 10; i++ {
 				wg.Add(1)
 				go func(n int) {
-					defer wg.Done()
-
-					data.tag = "tag_" + strconv.Itoa(i+1)
-					data.buffer = append(data.buffer, 1)
+					if n > data {
+						data = n
+					}
+					wg.Done()
 				}(i)
 			}
 
 			wg.Wait()
 
-			Expect(data.tag).Should(Equal("tag_11"))
-			Expect(len(data.buffer)).Should(Equal(10))
+			Expect(data).Should(Equal(9))
 		})
 	})
 
-	FContext("원자적 연산", func() {
-		It("2000번 더하고, 1000번 뺄때 최종값은 1000이다. ", func() {
-			runtime.GOMAXPROCS(runtime.NumCPU())
+	Context("원자적 연산", func() {
 
+		It("2000더하고 1000빼기", func() {
 			var data int64 = 0
 			wg := new(sync.WaitGroup)
 
