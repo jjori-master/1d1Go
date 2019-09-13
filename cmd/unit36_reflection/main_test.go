@@ -52,5 +52,19 @@ var _ = Describe("Unit 36 reflection", func() {
 
 			Expect(v.Float()).Should(Equal(1.3))
 		})
+
+		It("리플렉션으로 구조체 태그 이름 가져오기", func() {
+			p := Person{}
+
+			name, ok := reflect.TypeOf(p).FieldByName("name")
+			Expect(ok).To(BeTrue())
+			Expect(name.Tag.Get("tag1")).Should(Equal("이름"))
+			Expect(name.Tag.Get("tag2")).Should(Equal("Name"))
+
+			age, ok := reflect.TypeOf(p).FieldByName("age")
+			Expect(ok).To(BeTrue())
+			Expect(age.Tag.Get("tag1")).Should(Equal("나이"))
+			Expect(age.Tag.Get("tag2")).Should(Equal("Age"))
+		})
 	})
 })

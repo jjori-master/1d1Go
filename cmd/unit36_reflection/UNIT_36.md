@@ -47,4 +47,34 @@
   Expect(v.Float()).Should(Equal(1.3))
   ```
 
-  
+
+
+
+- 리플렉션은 구조체 필드(Field)의 `태그 정보` 를 가져온다.
+
+  > 구조체의 필드는 태그를 지정할 수 있다.
+  >
+  > ```go
+  > type Person struct {
+  > 	name string `tag1:"이름"tag2:"Name"`
+  > 	age int `tag1:"나이"tag2:"Age"`
+  > }
+  > ```
+
+  - 구조체 필드 태그 정보를 가져올 수 있다.
+
+    ```go
+    p := Person{}
+    
+    name, ok := reflect.TypeOf(p).FieldByName("name")
+    Expect(ok).To(BeTrue())
+    Expect(name.Tag.Get("tag1")).Should(Equal("이름"))
+    Expect(name.Tag.Get("tag2")).Should(Equal("Name"))
+    
+    age, ok := reflect.TypeOf(p).FieldByName("age")
+    Expect(ok).To(BeTrue())
+    Expect(age.Tag.Get("tag1")).Should(Equal("나이"))
+    Expect(age.Tag.Get("tag2")).Should(Equal("Age"))
+    ```
+
+    
