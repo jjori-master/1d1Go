@@ -66,5 +66,30 @@ var _ = Describe("Unit 36 reflection", func() {
 			Expect(age.Tag.Get("tag1")).Should(Equal("나이"))
 			Expect(age.Tag.Get("tag2")).Should(Equal("Age"))
 		})
+
+		It("리플렉션으로 포인터 정보 확인하기", func() {
+			var a *int = new(int)
+			*a = 1
+
+			aType := fmt.Sprint(reflect.TypeOf(a))
+			bValueType := fmt.Sprint(reflect.ValueOf(a).Elem())
+			var aValue int64 = reflect.ValueOf(a).Elem().Int()
+
+			Expect(aType).Should(Equal("*int"))
+			Expect(bValueType).Should(Equal("1"))
+			Expect(aValue).Should(Equal(int64(1)))
+
+			var b interface{}
+			b = 2
+
+			bType := fmt.Sprint(reflect.TypeOf(b))
+			bValueOf := fmt.Sprint(reflect.ValueOf(b))
+			bValue := reflect.ValueOf(b).Int()
+
+			Expect(bType).Should(Equal("int"))
+			Expect(bValueOf).Should(Equal("2"))
+			Expect(bValue).Should(Equal(int64(2)))
+
+		})
 	})
 })

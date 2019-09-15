@@ -67,7 +67,7 @@
     p := Person{}
     
     name, ok := reflect.TypeOf(p).FieldByName("name")
-    Expect(ok).To(BeTrue())
+    Expect(ok).To(BeTrue()) 
     Expect(name.Tag.Get("tag1")).Should(Equal("이름"))
     Expect(name.Tag.Get("tag2")).Should(Equal("Name"))
     
@@ -77,4 +77,37 @@
     Expect(age.Tag.Get("tag2")).Should(Equal("Age"))
     ```
 
-    
+
+
+
+- 리플렉션을 이용해 일반 포인터와 인터페이스 정보를 확인한다.
+
+  ```go
+  // 포인터 정보 확인
+  var a *int = new(int)
+  *a = 1
+  
+  pType := fmt.Sprint(reflect.TypeOf(a))
+  
+  // 포인터의 실제 정보를 가져오기 위해서는 Elem를 사용하여야 합니다.
+  pValueType := fmt.Sprint(reflect.ValueOf(a).Elem())
+  // pValue := refect.ValueOf(a).Int() -> panic 발생
+  var pValue int64 = reflect.ValueOf(a).Elem().Int()
+  
+  Expect(pType).Should(Equal("*int"))
+  Expect(pValueType).Should(Equal("1"))
+  Expect(pValue).Should(Equal(int64(1)))
+  
+  var b interface{}
+  b = 2
+  
+  bType := fmt.Sprint(reflect.TypeOf(b))
+  bValueOf := fmt.Sprint(reflect.ValueOf(b))
+  bValue := reflect.ValueOf(b).Int()
+  
+  Expect(bType).Should(Equal("int"))
+  Expect(bValueOf).Should(Equal("2"))
+  Expect(bValue).Should(Equal(int64(2)))
+  ```
+
+  
