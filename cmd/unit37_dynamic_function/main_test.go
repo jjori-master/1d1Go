@@ -1,6 +1,7 @@
 package unit37_dynamic_function
 
 import (
+	"math"
 	"reflect"
 	"testing"
 
@@ -43,5 +44,28 @@ var _ = Describe("Unit 37 동적 함수 생성", func() {
 			Expect(err).To(BeNil())
 		})
 
+		It("int, float, string 타입별 sum 함수 실행", func() {
+			var intSum func(int, int) (int64, error)
+			var floatSum func(float64, float64) (float64, error)
+			var stringSum func(string, string) (string, error)
+
+			makeSum(&intSum)
+			makeSum(&floatSum)
+			makeSum(&stringSum)
+
+			v, err := intSum(1, 2)
+			Expect(err).To(BeNil())
+			Expect(v).Should(Equal(int64(3)))
+
+			const epsilon = 1e-4
+			v2, err2 := floatSum(1.2, 2.3)
+			result := math.Abs((1.2+2.3)-v2) <= epsilon
+			Expect(err2).To(BeNil())
+			Expect(result).To(BeTrue())
+
+			v3, err3 := stringSum("1", "1")
+			Expect(err3).To(BeNil())
+			Expect(v3).Should(Equal("11"))
+		})
 	})
 })

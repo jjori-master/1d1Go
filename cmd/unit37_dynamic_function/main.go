@@ -26,6 +26,9 @@ func sum(args []reflect.Value) []reflect.Value {
 
 	case reflect.Float32, reflect.Float64:
 		return []reflect.Value{reflect.ValueOf(a.Float() + b.Float()), nilError}
+
+	case reflect.String:
+		return []reflect.Value{reflect.ValueOf(a.String() + b.String()), nilError}
 	}
 
 	return []reflect.Value{reflect.ValueOf(0), nilError}
