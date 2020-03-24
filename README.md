@@ -15,7 +15,7 @@
   > go 1.11버전 이후부터는 `dep`이 아니라 `mod`를 사용한다.
 
   ```bash
-  $ export GO111MODULE=on
+  $ export GO111MODULE=on // 1.14 버전부터는 사용하지 않는다.
   
   $ go mod init
   $ go mod download
